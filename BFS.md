@@ -34,4 +34,65 @@
 ```
 ## 题目一：滑动谜题
 1. 各一个2*3的棋盘上有 5 个 1~5 的数字和一个 0 代表空格。每次移动，你可以选择 0 与一个相邻数字（上下左右）交换。最终当棋盘上数字顺序为 [[1,2,3],[4,5,0]] 时，游戏结束。给出一个初始状态 board，返回最少的移动次数，如果无法完成游戏则返回 -1 。
-2. 思路：我们
+2. 思路：我们通过映射将二维棋盘转换为一维字符串来表示状态，然后使用BFS来遍历所有可能的状态，直到找到目标状态。
+```cpp
+#include<vectotr>
+#include<string>
+#include<queue>
+#include<unordered_set>
+class Solution{
+    public:
+    int slidingPuzzle(vector<vector<int>>&board){
+        string start="";
+        for(int i=0;i<board.size();i++){
+            for(int j=0;j<board[0].size();j++){
+                start+=to_string(board[i][j]);
+            }
+        }
+        string target="123450";
+        queue <string>q;
+        unordered_set<string>visited;
+        //
+        q.push(strat);
+        visited.insert(start);
+        int step=0;
+        while(!q.empty()){
+            int sz=q.size();
+            for(int i=0;i<sz;i++){
+                string cur=q.front();
+                q.pop();
+                if(cur==target){
+                    return step;
+                }
+                for(string next:getNextStates(cur)){
+                    if(!visited.count(next)){
+                        q.push(next);
+                        visited.insert(next);
+
+                    }
+                }
+            }
+            step++;
+        }
+        return -1;
+    }
+    vector<string>getNextStates(string board){
+        vector<vector<int>>mapping={{1,3},{0,2,4},{1,5},{0,4},{1,3,5},{2,4}};
+        int idx=board.find('0');
+        vector<string>nextStates;
+        for(int neighbor:mapping[idx]){
+            string next=board;
+            swap(next[idx],next[neighbor]);
+            nextStates.push_back(next);
+        }
+        return nextStates;
+
+    }
+    string swap(string str,int i,int j){
+        char temp=str[i];
+        str[i]=str[j];
+        str[j]=temp;
+        return str;
+    }
+}
+```
